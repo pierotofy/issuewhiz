@@ -1,5 +1,8 @@
 name: 'IssueWhiz'
 description: 'Automated Issue Triaging'
+branding:
+  icon: 'compass'
+  color: 'blue'
 inputs:
   ghToken:
     description: 'GitHub Token with write access to repository issues'
