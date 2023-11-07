@@ -138,7 +138,7 @@ There are only 2 types: numbers and strings. Numbers may be floating point or in
 | Action  | Description                 |
 | ------- | --------------------------- |
 | comment | Add a comment to the issue  |
-| close   | Close the comment           |
+| close   | Close the issue             |
 | stop    | Stop executing actions      |
 | label   | Assign a label to the issue |
 
