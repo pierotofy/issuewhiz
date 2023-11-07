@@ -1,26 +1,137 @@
-# Hello world javascript action
+# IssueWhiz - Automated Issue Triaging
 
-This action prints "Hello World" or "Hello" + the name of a person to greet to the log.
+![IssueWhiz](https://github.com/pierotofy/issuewhiz/assets/1951843/f41c231d-4fd8-4ff1-8072-bf3703b158fa)
 
-## Inputs
+IssueWhiz automates the triaging of issues in your repositories. It helps streamline the process of categorizing issues and enforcing project's guidelines using customizable and flexible rules.
 
-### `who-to-greet`
+## Features
 
-**Required** The name of the person to greet. Default `"World"`.
+- Automatically label, close and comment on newly opened issues.
+- Rules defined using boolean logic coupled with variables computed with LLM-based text classification.
+- Save time and reduce manual triaging efforts.
+- Easily customizable to fit specific needs.
 
-## Outputs
 
-### `time`
-
-The time we greeted you.
-
-## Example usage
+## Usage
+ 
+ * Create a `.github/workflows/issuewhiz.yml` in your repository:
 
 ```yaml
-uses: actions/hello-world-javascript-action@e76147da8e5c81eaf017dede5645551d4b94427b
-with:
-  who-to-greet: 'Mona the Octocat'
+name: Issue Triage
+on:
+  issues:
+    types:
+      - opened
+jobs:
+  issue_triage:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: pierotofy/issuewhiz@v1
+        with:
+          # Your OpenAI token (https://platform.openai.com/api-keys)
+          # Added to : https://github.com/<repo>/<name>/settings/secrets actions
+          openAI: ${{ secrets.OPENAI_TOKEN }}
+
+          # GitHub Token with write access to repository issues
+          # (you can leave this unless you want to use a different user that "github-actions")
+          ghToken: ${{ secrets.GITHUB_TOKEN }}
+
+          # Optional filter, any line in an issue that begins with "#" 
+          # will be discarded prior to LLM evaluation 
+          filter: |
+            - "#"
+          
+          # Define your boolean questions, which must evaluate to yes/no or true/false
+          # <VAR>: <QUESTION>
+          variables: |
+            - A: "A question about using a software or seeking guidance on doing something?"
+            - B: "Contains a suggestion for an improvement or a feature request?"
+          
+          # Boolean expressions evaluating to true will execute the actions listed next to it
+          # Evaluation continues until there are no more expressions, or a "stop: true" action is found
+          logic: |
+            - "A and (not B)": [label: question, stop: true]
+            - "B and (not A)": [label: enhancement, stop: true]
+            - "(not A) and (not B)": [comment: "I'm not sure how to classify this one! I will close the issue", close: true]
+
+          # Optional signature to append to each message posted by the bot
+          signature: "p.s. I'm just an automated script, not a human being."
 ```
+
+## Expressions
+
+You can reference all of your variables in the boolean expressions, as well as the special `body` variable, which contains the text of the issue. This can be useful for doing classical regex matches alongside LLM evaluation.
+
+You can use all the expressions supported by [Filtrex](https://github.com/joewalnes/filtrex):
+
+There are only 2 types: numbers and strings. Numbers may be floating point or integers. Boolean logic is applied on the truthy value of values (e.g. any non-zero number is true, any non-empty string is true, otherwise false).
+
+| Values                  | Description                                            |
+| ----------------------- | ------------------------------------------------------ |
+| 43, -1.234              | Numbers                                                |
+| "hello"                 | String                                                 |
+| foo, a.b.c, 'foo-bar'   | External data variable defined by application (may be numbers or strings) |
+
+| Numeric arithmetic | Description |
+| ------------------ | ----------- |
+| x + y              | Add         |
+| x - y              | Subtract    |
+| x * y              | Multiply    |
+| x / y              | Divide      |
+| x % y              | Modulo      |
+| x ^ y              | Power       |
+
+| Comparisons     | Description                                     |
+| --------------- | ----------------------------------------------- |
+| x == y          | Equals                                          |
+| x < y           | Less than                                       |
+| x <= y          | Less than or equal to                          |
+| x > y           | Greater than                                    |
+| x >= y          | Greater than or equal to                       |
+| x ~= y          | Regular expression match                       |
+| x in (a, b, c)  | Equivalent to (x == a or x == b or x == c)     |
+| x not in (a, b, c) | Equivalent to (x != a and x != b and x != c) |
+
+| Boolean logic | Description           |
+| -------------- | --------------------- |
+| x or y        | Boolean or            |
+| x and y       | Boolean and           |
+| not x         | Boolean not           |
+| x ? y : z     | If boolean x, value y, else z |
+| ( x )         | Explicit operator precedence |
+
+| Built-in functions | Description                                      |
+| ------------------ | -------------------------------------------- |
+| abs(x)             | Absolute value                                |
+| ceil(x)            | Round floating point up                       |
+| floor(x)           | Round floating point down                     |
+| log(x)             | Natural logarithm                             |
+| max(a, b, c...)    | Max value (variable length of args)           |
+| min(a, b, c...)    | Min value (variable length of args)           |
+| random()           | Random floating point from 0.0 to 1.0        |
+| round(x)           | Round floating point                           |
+| sqrt(x)            | Square root                                   |
+
+## Actions
+
+| Action  | Description                 |
+| ------- | --------------------------- |
+| comment | Add a comment to the issue  |
+| close   | Close the comment           |
+| stop    | Stop executing actions      |
+| label   | Assign a label to the issue |
+
+Need more? Help us.
+
+## Roadmap
+
+We welcome contributions! Check out our [issues](https://github.com/pierotofy/issuewhiz) for our roadmap, pick one and open a PR!
+
+## License
+
+AGPLv3
 
 ## Build
 

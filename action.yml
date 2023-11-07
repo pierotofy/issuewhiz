@@ -1,13 +1,25 @@
-name: 'Hello world'
-description: 'Greet someone and record the time'
+name: 'IssueWhiz'
+description: 'Automated Issue Triaging'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  ghToken:
+    description: 'GitHub Token with write access to repository issues'
     required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+    default: ''
+  openAI:
+    description: 'OpenAI Token'
+    default: ''
+  model:
+    description: 'AI model to use'
+    default: 'gpt-3.5-turbo-1106'
+  filter:
+    description: 'Lines in the issue text matching these prefixes will be removed prior to LLM evaluation'
+    default: ''
+  variables:
+    description: 'Variable definitions and boolean questions'
+    default: ''
+  logic:
+    description: 'Logic expressions and corresponding actions'
+    default: ''
 runs:
   using: 'node20'
   main: 'dist/index.js'
