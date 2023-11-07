@@ -74,7 +74,7 @@ async function run() {
     let actions = l[expr];
     try{
       let evaluate = filtrex.compileExpression(expr);
-      expressions.push({evaluate, actions});
+      expressions.push({evaluate, actions, expr});
     }catch(e){
       console.log(`Cannot evaluate expression: ${e}. See https://github.com/joewalnes/filtrex#expressions`);
       process.exit(1);
@@ -145,20 +145,23 @@ TEXT:
 
   evalContext["body"] = body;
 
-  evalContext["A"] = true;
-  evalContext["B"] = false;
+  console.log("Evaluation context: ", evalContext);
 
   for (let i = 0; i < expressions.length; i++){
     let e = expressions[i];
 
     if (e.evaluate(evalContext)){
+      console.log(`Evaluated ${e.expr}: true`);
+
       // Execute actions
       for (let j = 0; j < e.actions.length; j++){
         let action = e.actions[j];
         
         if (action.stop){
+          console.log("Action: stop");
           process.exit(0);
         }else if (action.comment){
+          console.log(`Action: comment ${action.comment}`);
           try{
             await octokit.rest.issues.createComment({
               owner: repository.owner.login,
@@ -170,6 +173,7 @@ TEXT:
             console.log(`Cannot comment: ${e}`);
           }
         }else if (action.close){
+          console.log(`Action: close`);
           try{
             await octokit.rest.issues.update({
               owner: repository.owner.login,
@@ -181,6 +185,7 @@ TEXT:
             console.log(`Cannot close issue: ${e}`);
           }
         }else if (action.label){
+          console.log(`Action: label ${action.label}`);
           try{
             await octokit.rest.issues.addLabels({
               owner: repository.owner.login,
@@ -196,6 +201,8 @@ TEXT:
           process.exit(1);
         }
       }
+    }else{
+      console.log(`Evaluated ${e.expr}: false`);
     }
   }
 }
