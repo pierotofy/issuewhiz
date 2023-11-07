@@ -1,5 +1,12 @@
 # IssueWhiz - Automated Issue Triaging
 
+[![License](https://img.shields.io/github/license/pierotofy/issuewhiz)](https://github.com/pierotofy/issuewhiz/blob/main/LICENSE)
+[![GitHub Issues](https://img.shields.io/github/issues/pierotofy/issuewhiz)](https://github.com/pierotofy/issuewhiz/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/pierotofy/issuewhiz)](https://github.com/pierotofy/issuewhiz/pulls)
+[![GitHub Stars](https://img.shields.io/github/stars/pierotofy/issuewhiz)](https://github.com/pierotofy/issuewhiz/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/pierotofy/issuewhiz)](https://github.com/pierotofy/issuewhiz/network/members)
+[![GitHub Release](https://img.shields.io/github/v/release/pierotofy/issuewhiz)](https://github.com/pierotofy/issuewhiz/releases)
+
 ![IssueWhiz](https://github.com/pierotofy/issuewhiz/assets/1951843/f41c231d-4fd8-4ff1-8072-bf3703b158fa)
 
 IssueWhiz automates the triaging of issues in your repositories. It helps streamline the process of categorizing issues and enforcing project's guidelines using customizable and flexible rules.
@@ -23,8 +30,6 @@ And define rules to act on such questions:
  * if `A and C` --> Add label `bug backend`
  * if `A` --> Add label `bug`
  * else --> Add comment `Thanks for opening an issue! We will triage this shortly.`
-
-You define the questions, logic and actions, so it offers a large degree of flexibility.
 
 ## Usage
  
