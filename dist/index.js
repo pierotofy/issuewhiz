@@ -56836,6 +56836,7 @@ TEXT:
       const chatCompletion = await openai.chat.completions.create({
         messages: [{ role: 'user', content: llmPrompt }],
         model,
+        temperature: 0.8
       });
       if (!chatCompletion.choices) throw new Error("Invalid response");
       
