@@ -122,6 +122,9 @@ TEXT:
         model,
       });
       if (!chatCompletion.choices) throw new Error("Invalid response");
+
+      console.log("LLM reply: ", chatCompletion.choices[0].message.content);
+
       let content = extractJSONArray(chatCompletion.choices[0].message.content);
 
       // Should match the number of questions
