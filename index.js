@@ -105,14 +105,15 @@ TEXT:
 `;
 
     llmPrompt = llmPrompt.replace(">>QUESTIONS<<", llmQuestions.map(q => `- ${q.vexpr}`).join("\n"));
-    if (filter){
-      body = title + "\n\n" + body.split("\n").map(line => {
+    body = title + "\n\n" + body.split("\n").map(line => {
+      if (filter){
         filter.forEach(f => {
           line = line.replace(new RegExp(`^${f}.*`, 'g'), "");
         });
-        return line;
-      }).join("\n");
-    }
+      }
+      return line;
+    }).join("\n");
+    
     llmPrompt = llmPrompt.replace(">>TEXT<<", body);
 
     // Ask
@@ -122,7 +123,8 @@ TEXT:
         model,
       });
       if (!chatCompletion.choices) throw new Error("Invalid response");
-
+      
+      console.log("LLM prompt: ", llmPrompt);
       console.log("LLM reply: ", chatCompletion.choices[0].message.content);
 
       let content = extractJSONArray(chatCompletion.choices[0].message.content);
