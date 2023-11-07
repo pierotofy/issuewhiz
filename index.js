@@ -1,10 +1,18 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const YAML = require('yaml');
 
 async function run() {
   const ghToken = core.getInput('ghToken', { required: true });
   const openAIToken = core.getInput('openAI', { required: true });
-  const variables = core.getInput('variables', { required: true });
+  let variables;
+
+  try{
+    variables = YAML.parse(core.getInput('variables', { required: true }));
+  }catch(e){
+    console.log(`Cannot parse "variables": ${e}`)
+    process.exit(1);
+  }
 
   // const octokit = github.getOctokit(ghToken);
 
