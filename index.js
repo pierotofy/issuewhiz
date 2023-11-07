@@ -39,7 +39,7 @@ function extractJSONArray(str) {
 async function run() {
   const ghToken = core.getInput('ghToken', { required: true });
   const openAIToken = core.getInput('openAI');
-  const model = core.getInput('model') || 'gpt-3.5-turbo';
+  const model = core.getInput('model') || 'gpt-3.5-turbo-1106';
   const filter = parseYaml(core.getInput('filter'));
   const variables = parseYaml(core.getInput('variables', { required: true }));
   const logic = parseYaml(core.getInput('logic', { required: true }));
