@@ -11,6 +11,20 @@ IssueWhiz automates the triaging of issues in your repositories. It helps stream
 - Save time and reduce manual triaging efforts.
 - Easily customizable to fit specific needs.
 
+In a nutshell, you can define boolean questions using natural language, such as:
+
+ * A: Does this text look like a software bug report?
+ * B: Is this about a frontend problem?
+ * C: Is this about a backend problem?
+
+And define rules to act on such questions:
+
+ * if `A and B` --> Add label `bug frontend`
+ * if `A and C` --> Add label `bug backend`
+ * if `A` --> Add label `bug`
+ * else --> Add comment `Thanks for opening an issue! We will triage this shortly.`
+
+You define the questions, logic and actions, so it offers a large degree of flexibility.
 
 ## Usage
  
@@ -127,7 +141,14 @@ Need more? Help us.
 
 ## Roadmap
 
-We welcome contributions! Check out our [issues](https://github.com/pierotofy/issuewhiz) for our roadmap, pick one and open a PR!
+We welcome contributions!
+
+Here's some ideas:
+
+ * Adding support for more LLM backend APIs like LLAMA
+ * Add support for more actions
+
+Or propose something by opening a pull request!
 
 ## License
 
