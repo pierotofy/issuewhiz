@@ -1,16 +1,24 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const YAML = require('yaml');
+const filtrex = require('filtrex');
 
 async function run() {
   const ghToken = core.getInput('ghToken', { required: true });
   // const openAIToken = core.getInput('openAI', { required: true });
-  let variables;
+  let variables, logic;
 
   try{
     variables = YAML.parse(core.getInput('variables', { required: true }));
   }catch(e){
     console.log(`Cannot parse "variables": ${e}`)
+    process.exit(1);
+  }
+
+  try{
+    logic = YAML.parse(core.getInput('logic', { required: true }));
+  }catch(e){
+    console.log(`Cannot parse "logic": ${e}`)
     process.exit(1);
   }
 
@@ -208,8 +216,14 @@ async function run() {
   if (comments > 0) return;
   if (labels.length > 0) return;
 
-console.log(variables);
-console.log(typeof variables);
+  console.log(variables, logic);
+try{
+  let expr = filtrex.compileExpression("A and B");
+  console.log(expr({A: true, B: false}));
+}catch(e){
+  console.log(`Cannot evaluate expression: ${e}. See https://github.com/joewalnes/filtrex#expressions`);
+}
+
 
   // const { data } = await octokit.rest.issues.get({
   //     owner: 'pierotofy',
