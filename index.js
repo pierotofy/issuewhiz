@@ -4,7 +4,7 @@ const YAML = require('yaml');
 
 async function run() {
   const ghToken = core.getInput('ghToken', { required: true });
-  const openAIToken = core.getInput('openAI', { required: true });
+  // const openAIToken = core.getInput('openAI', { required: true });
   let variables;
 
   try{
