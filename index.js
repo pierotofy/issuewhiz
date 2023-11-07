@@ -93,7 +93,7 @@ async function run() {
   }
 
   if (llmQuestions && openai){
-    let llmPrompt = `Your job is to answer each of the following QUESTIONS about TEXT with a 0 (NO) or 1 (YES). Your output should be a JSON array with 0s or 1s, one number for each question. ONLY ANSWER WITH JSON.
+    let llmPrompt = `Your job is to answer each of the following QUESTIONS about TEXT with a 0 (NO) or 1 (YES). Your output should be a JSON array with 0s or 1s, one number for each question. ONLY ANSWER WITH JSON. DO NOT PROVIDE EXPLANATIONS FOR YOUR ANSWERS.
 
 QUESTIONS:
 
