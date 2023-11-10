@@ -81,7 +81,14 @@ jobs:
 
 ## Expressions
 
-You can reference all of your variables in the boolean expressions, as well as the special `body` variable, which contains the text of the issue. This can be useful for doing classical regex matches alongside LLM evaluation.
+You can reference all of your variables in the boolean expressions, as well as the special `body`, `title` and `title_lowercase` variables, which contains the text of the issue body and title respectively. This can be useful for doing classical regex matches alongside LLM evaluation.
+
+For example, to match the substring "bug:" in the issue title:
+
+```yaml
+logic: |
+  - 'title ~= "bug:"': [stop: true]
+```
 
 You can use all the expressions supported by [Filtrex](https://github.com/joewalnes/filtrex):
 

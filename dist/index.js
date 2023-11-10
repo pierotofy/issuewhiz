@@ -56860,6 +56860,9 @@ TEXT:
   }
 
   evalContext["body"] = body;
+  evalContext["title"] = title;
+  evalContext["title_lowercase"] = title.toLowerCase();
+  
 
   console.log("Evaluation context: ", evalContext);
 
