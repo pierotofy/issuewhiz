@@ -7,7 +7,8 @@
 [![GitHub Forks](https://img.shields.io/github/forks/pierotofy/issuewhiz)](https://github.com/pierotofy/issuewhiz/network/members)
 [![GitHub Release](https://img.shields.io/github/v/release/pierotofy/issuewhiz)](https://github.com/pierotofy/issuewhiz/releases)
 
-![IssueWhiz](https://github.com/pierotofy/issuewhiz/assets/1951843/f41c231d-4fd8-4ff1-8072-bf3703b158fa)
+<img width="425" height="389" alt="IssueWhiz" src="https://github.com/user-attachments/assets/b77f4dc8-6c49-427d-a71d-1b5a8e05a572" />
+
 
 IssueWhiz automates the triaging of issues in your repositories. It helps streamline the process of categorizing issues and enforcing project's guidelines using customizable and flexible rules.
 
