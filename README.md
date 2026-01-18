@@ -11,6 +11,8 @@
 
 IssueWhiz automates the triaging of issues in your repositories. It helps streamline the process of categorizing issues and enforcing project's guidelines using customizable and flexible rules.
 
+**New**: Added support for Google Gemini.
+
 ## Features
 
 - Automatically label, close and comment on newly opened issues.
@@ -47,7 +49,7 @@ jobs:
     permissions:
       issues: write
     steps:
-      - uses: pierotofy/issuewhiz@v1
+      - uses: pierotofy/issuewhiz@v2
         with:
           # Your Gemini API token (https://aistudio.google.com/app/api-keys)
           # Added to : https://github.com/<repo>/<name>/settings/secrets actions
