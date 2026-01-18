@@ -26,6 +26,9 @@ inputs:
   logic:
     description: 'Logic expressions and corresponding actions'
     default: ''
+  signature:
+    description: 'Optional text the issue whiz bot should add at the end of a message when communicating with users'
+    default: ''
 runs:
   using: 'node20'
   main: 'dist/index.js'
