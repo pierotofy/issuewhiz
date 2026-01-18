@@ -49,9 +49,15 @@ jobs:
     steps:
       - uses: pierotofy/issuewhiz@v1
         with:
-          # Your OpenAI token (https://platform.openai.com/api-keys)
+          # Your Gemini API token (https://aistudio.google.com/app/api-keys)
           # Added to : https://github.com/<repo>/<name>/settings/secrets actions
-          openAI: ${{ secrets.OPENAI_TOKEN }}
+          gemini: ${{ secrets.GEMINI_TOKEN }}
+          model: 'gemini-2.5-flash'
+
+          # - OR - your OpenAI token (https://platform.openai.com/api-keys)
+          # Added to : https://github.com/<repo>/<name>/settings/secrets actions
+          # openAI: ${{ secrets.OPENAI_TOKEN }}
+          # model: 'gpt-3.5-turbo-1106'
 
           # GitHub Token with write access to repository issues
           # (you can leave this unless you want to use a different user that "github-actions")

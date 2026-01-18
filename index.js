@@ -3,6 +3,7 @@ const github = require('@actions/github');
 const YAML = require('yaml');
 const filtrex = require('filtrex');
 const OpenAI = require('openai');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 function parseYaml(v){
   if (v === "") return v;
@@ -39,6 +40,7 @@ function extractJSONArray(str) {
 async function run() {
   const ghToken = core.getInput('ghToken', { required: true });
   const openAIToken = core.getInput('openAI');
+  const geminiToken = core.getInput('gemini');
   const model = core.getInput('model') || 'gpt-3.5-turbo-1106';
   const filter = parseYaml(core.getInput('filter'));
   const variables = parseYaml(core.getInput('variables', { required: true }));
@@ -46,8 +48,12 @@ async function run() {
   const signature = core.getInput('signature');
 
   let openai;
+  let genAI;
   if (openAIToken){
     openai = new OpenAI({apiKey: openAIToken});
+  }
+  if (geminiToken){
+    genAI = new GoogleGenerativeAI(geminiToken);
   }
   const octokit = github.getOctokit(ghToken);
 
@@ -92,7 +98,7 @@ async function run() {
     llmQuestions.push({vid, vexpr});
   }
 
-  if (llmQuestions && openai){
+  if (llmQuestions && (openai || genAI)){
     let llmPrompt = `Your job is to answer each of the following QUESTIONS about TEXT with a 0 (NO) or 1 (YES). Your output should be a JSON array with 0s or 1s, one number for each question. ONLY ANSWER WITH JSON. DO NOT PROVIDE EXPLANATIONS FOR YOUR ANSWERS.
 
 QUESTIONS:
@@ -118,18 +124,34 @@ TEXT:
 
     // Ask
     try{
-      const chatCompletion = await openai.chat.completions.create({
-        messages: [{ role: 'user', content: llmPrompt }],
-        model,
-        temperature: 0
-      });
-      if (!chatCompletion.choices) throw new Error("Invalid response");
+      let content;
       
-      console.log("LLM prompt: ", llmPrompt);
-      console.log("LLM reply: ", chatCompletion.choices[0].message.content);
+      if (geminiToken){
+        // Use Gemini
+        const geminiModel = genAI.getGenerativeModel({ model });
+        const result = await geminiModel.generateContent(llmPrompt);
+        const response = await result.response;
+        const text = response.text();
+        
+        console.log("LLM prompt: ", llmPrompt);
+        console.log("LLM reply: ", text);
+        
+        content = extractJSONArray(text);
+      }else{
+        // Use OpenAI
+        const chatCompletion = await openai.chat.completions.create({
+          messages: [{ role: 'user', content: llmPrompt }],
+          model,
+          temperature: 0
+        });
+        if (!chatCompletion.choices) throw new Error("Invalid response");
+        
+        console.log("LLM prompt: ", llmPrompt);
+        console.log("LLM reply: ", chatCompletion.choices[0].message.content);
 
-      let content = extractJSONArray(chatCompletion.choices[0].message.content);
-
+        content = extractJSONArray(chatCompletion.choices[0].message.content);
+      }
+      
       // Should match the number of questions
       if (content.length !== llmQuestions.length) throw new Error(`Cannot evaluate questions (LLM replied: ${content})`);
 
